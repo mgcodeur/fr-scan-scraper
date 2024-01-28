@@ -18,9 +18,14 @@ if (args.getArgs().length === 0) {
             rl.close();
         })
     });
+
+    rl.on("close", () => {
+        process.exit();
+    });
 }
 else {
     const mangaSlug = args.getMangaSlug();
     await scrapeMangaDetails(mangaSlug);
     await scrapeChapters(mangaSlug, args.getMangaChapter());
+    process.exit();
 }

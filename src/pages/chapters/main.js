@@ -57,6 +57,9 @@ const scrapeChapters = async (slug, chapter) => {
             );
         }
     }
+
+    await page.close();
+    await browser.close();
 }
 
 export { scrapeChapters };
