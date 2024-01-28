@@ -19,6 +19,10 @@ const scrapeMangaDetails = async (slug) => {
         timeout: config.maxWaitTime
     });
 
+    await page.screenshot({
+        path: 'example.png'
+    });
+
     await page.waitForSelector(".post-title h1", {
         timeout: config.maxWaitTime
     });
