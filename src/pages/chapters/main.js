@@ -12,15 +12,9 @@ const scrapeChapters = async (slug, chapter) => {
 
     const page = await context.newPage();
 
-    await page.goto(`${config.frScan.baseUrl}/manga/${slug}/`, {
-        timeout: config.maxWaitTime
-    });
-
     await page.waitForLoadState('domcontentloaded', {
         timeout: config.maxWaitTime
     });
-
-    await page.hover('#btn-read-last')
 
     const chapterRequest = await fetch(`${config.frScan.baseUrl}/manga/${slug}/ajax/chapters/`, {
         method: 'POST',
@@ -30,10 +24,6 @@ const scrapeChapters = async (slug, chapter) => {
 
     await page.setContent(chapterResponse);
 
-    await page.screenshot({
-        path: `screenshots/chapters/${getTimestamps()}-chapterlist.png`
-    });
-
     await page.waitForSelector('.page-content-listing li a', {
         timeout: config.maxWaitTime
     });
@@ -41,15 +31,6 @@ const scrapeChapters = async (slug, chapter) => {
     const chapterList = await page.evaluate(() => {
         const links = document.querySelectorAll('.page-content-listing li a');
         return Array.from(links).map((link) => link.getAttribute('href')).reverse();
-    });
-
-    await page.goto(chapterList[0], {
-        timeout: config.maxWaitTime
-    });
-
-
-    await page.waitForSelector('.page-break', {
-        timeout: config.maxWaitTime
     });
 
     for (const chapterLink of chapterList) {
