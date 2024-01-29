@@ -26,9 +26,14 @@ const scrapeChapters = async (slug, chapter) => {
     });
 
     await page.evaluate(() => {
-        document.querySelector('#manga-chapters-holder').scrollIntoView({
-            block: 'center',
+        const element = document.querySelector('#manga-chapters-holder');
+        const event = new WheelEvent('wheel', {
+            view: window,
+            bubbles: true,
+            cancelable: true,
         });
+
+        element.dispatchEvent(event);
     });
 
     await page.waitForSelector('#manga-chapters-holder .page-content-listing li a', {
