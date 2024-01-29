@@ -4,7 +4,7 @@ const config = {
         baseUrl: "https://fr-scan.com",
     },
     browser: {
-        headless: true,
+        headless: false,
     },
     output: {
         path: "catalog"

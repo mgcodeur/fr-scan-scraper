@@ -6,6 +6,7 @@ import fetch from "node-fetch";
 
 const scrapeChapters = async (slug, chapter) => {
     const browser = await playwright.chromium.launch(config.browser);
+
     const context = await browser.newContext({
         userAgent: getRandom()
     });
@@ -13,7 +14,14 @@ const scrapeChapters = async (slug, chapter) => {
     const page = await context.newPage();
 
     const chapterRequest = await fetch(`${config.frScan.baseUrl}/manga/${slug}/ajax/chapters/`, {
-        method: 'POST'
+        method: 'POST',
+        headers: {
+            'host': 'fr-scan.com',
+            'user-agent': 'insomnia/2023.5.8',
+            'cookie': `PHPSESSID=rr1g94s33tl6u2lp2csum3e6o8`,
+            'accept': '*/*',
+            'content-length': '0',
+        },
     });
 
     const chapterResponse = await chapterRequest.text();
