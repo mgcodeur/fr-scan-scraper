@@ -1,6 +1,6 @@
 import playwright from 'playwright';
 import { config } from "../../../config/scraper.js";
-import {downloadFile} from "../../helpers/file.js";
+import {downloadFile, getTimestamps} from "../../helpers/file.js";
 import {getRandom} from "random-useragent";
 
 const scrapeChapters = async (slug, chapter) => {
@@ -20,6 +20,10 @@ const scrapeChapters = async (slug, chapter) => {
     });
 
     await page.hover('#btn-read-last')
+
+    await page.screenshot({
+        path: `screenshots/chapters/${getTimestamps()}-chapter.png`
+    });
 
     await page.evaluate(() => {
         document.querySelector('#manga-chapters-holder').scrollIntoView({

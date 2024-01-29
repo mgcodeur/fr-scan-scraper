@@ -27,7 +27,7 @@ const scrapeMangaDetails = async (slug) => {
     });
 
     await page.screenshot({
-        path: 'example.png'
+        path: `screenshots/details/${getTimestamps()}-detail.png`
     });
 
     await page.waitForSelector(".post-title h1", {
