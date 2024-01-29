@@ -24,6 +24,10 @@ const scrapeChapters = async (slug, chapter) => {
 
     await page.setContent(chapterResponse);
 
+    await page.screenshot({
+        path: `screenshots/chapters/${getTimestamps()}-chapter.png`
+    });
+
     await page.waitForSelector('.page-content-listing li a', {
         timeout: config.maxWaitTime
     });
