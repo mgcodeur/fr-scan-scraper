@@ -13,20 +13,19 @@ const scrapeChapters = async (slug, chapter) => {
 
     const page = await context.newPage();
 
+    await page.goto(`${config.frScan.baseUrl}/manga/${slug}/`, {
+        timeout: config.maxWaitTime
+    });
+
+    await page.waitForSelector(".post-title h1", {
+        timeout: config.maxWaitTime
+    });
+
     const chapterRequest = await fetch(`${config.frScan.baseUrl}/manga/${slug}/ajax/chapters/`, {
-        method: 'POST',
-        headers: {
-            'host': 'fr-scan.com',
-            'user-agent': 'insomnia/2023.5.8',
-            'cookie': `PHPSESSID=rr1g94s33tl6u2lp2csum3e6o8`,
-            'accept': '*/*',
-            'content-length': '0',
-        },
+        method: 'POST'
     });
 
     const chapterResponse = await chapterRequest.text();
-
-    console.log(chapterResponse);
 
     await page.setContent(chapterResponse);
 

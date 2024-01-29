@@ -3,8 +3,11 @@ const config = {
     frScan: {
         baseUrl: "https://fr-scan.com",
     },
+    flareSolver: {
+        baseUrl: "http://localhost:8191/v1"
+    },
     browser: {
-        headless: true,
+        headless: false,
     },
     output: {
         path: "catalog"
