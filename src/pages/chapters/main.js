@@ -22,10 +22,6 @@ const scrapeChapters = async (slug, chapter) => {
 
     await page.hover('#btn-read-last')
 
-    await page.screenshot({
-        path: `screenshots/chapters/${getTimestamps()}-chapter.png`
-    });
-
     const chapterRequest = await fetch(`${config.frScan.baseUrl}/manga/${slug}/ajax/chapters/`, {
         method: 'POST',
     });
@@ -33,6 +29,10 @@ const scrapeChapters = async (slug, chapter) => {
     const chapterResponse = await chapterRequest.text();
 
     await page.setContent(chapterResponse);
+
+    await page.screenshot({
+        path: `screenshots/chapters/${getTimestamps()}-chapterlist.png`
+    });
 
     await page.waitForSelector('.page-content-listing li a', {
         timeout: config.maxWaitTime
