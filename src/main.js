@@ -27,5 +27,5 @@ else {
     const mangaSlug = args.getMangaSlug();
     await scrapeMangaDetails(mangaSlug);
     await scrapeChapters(mangaSlug, args.getMangaChapter());
-    process.exit();
+    //process.exit();
 }

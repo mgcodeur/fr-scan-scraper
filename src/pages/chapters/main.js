@@ -2,6 +2,7 @@ import playwright from 'playwright';
 import { config } from "../../../config/scraper.js";
 import {downloadFile, getTimestamps} from "../../helpers/file.js";
 import {getRandom} from "random-useragent";
+import fetch from "node-fetch";
 
 const scrapeChapters = async (slug, chapter) => {
     const browser = await playwright.chromium.launch(config.browser);
@@ -25,26 +26,27 @@ const scrapeChapters = async (slug, chapter) => {
         path: `screenshots/chapters/${getTimestamps()}-chapter.png`
     });
 
-    await page.evaluate(() => {
-        const element = document.querySelector('#manga-chapters-holder');
-        const event = new WheelEvent('wheel', {
-            view: window,
-            bubbles: true,
-            cancelable: true,
-        });
-
-        element.dispatchEvent(event);
+    const chapterRequest = await fetch(`${config.frScan.baseUrl}/manga/${slug}/ajax/chapters/`, {
+        method: 'POST',
     });
 
-    await page.waitForSelector('#manga-chapters-holder .page-content-listing li a', {
+    const chapterResponse = await chapterRequest.text();
+
+    await page.setContent(chapterResponse);
+
+    await page.waitForSelector('.page-content-listing li a', {
         timeout: config.maxWaitTime
     });
 
-    const chapterList = await page.$$eval('#manga-chapters-holder .page-content-listing li a', (links) => {
-        return links.map((link) => link.getAttribute('href')).reverse();
+    const chapterList = await page.evaluate(() => {
+        const links = document.querySelectorAll('.page-content-listing li a');
+        return Array.from(links).map((link) => link.getAttribute('href')).reverse();
     });
 
-    await page.click('#manga-chapters-holder .page-content-listing li:last-of-type a');
+    await page.goto(chapterList[0], {
+        timeout: config.maxWaitTime
+    });
+
 
     await page.waitForSelector('.page-break', {
         timeout: config.maxWaitTime
