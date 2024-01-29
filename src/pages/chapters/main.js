@@ -12,15 +12,13 @@ const scrapeChapters = async (slug, chapter) => {
 
     const page = await context.newPage();
 
-    await page.waitForLoadState('domcontentloaded', {
-        timeout: config.maxWaitTime
-    });
-
     const chapterRequest = await fetch(`${config.frScan.baseUrl}/manga/${slug}/ajax/chapters/`, {
-        method: 'POST',
+        method: 'POST'
     });
 
     const chapterResponse = await chapterRequest.text();
+
+    console.log(chapterResponse);
 
     await page.setContent(chapterResponse);
 
