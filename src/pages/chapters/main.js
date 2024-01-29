@@ -1,10 +1,15 @@
 import playwright from 'playwright';
 import { config } from "../../../config/scraper.js";
 import {downloadFile} from "../../helpers/file.js";
+import {getRandom} from "random-useragent";
 
 const scrapeChapters = async (slug, chapter) => {
     const browser = await playwright.chromium.launch(config.browser);
-    const page = await browser.newPage();
+    const context = await browser.newContext({
+        userAgent: getRandom()
+    });
+
+    const page = await context.newPage();
 
     await page.goto(`${config.frScan.baseUrl}/manga/${slug}/`, {
         timeout: config.maxWaitTime

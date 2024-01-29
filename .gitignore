@@ -2,3 +2,5 @@ catalog
 node_modules
 .idea
 .vscode
+*.png
+*.webp

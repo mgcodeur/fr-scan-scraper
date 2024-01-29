@@ -3,10 +3,16 @@ import { config } from "../../../config/scraper.js";
 import { trimAndRemoveMultipleSpaces } from "./../../helpers/string.js";
 import {downloadFile, getTimestamps, saveInJsonFile} from "./../../helpers/file.js";
 import { cleanObject } from "./../../helpers/object.js";
+import {getRandom} from "random-useragent";
 
 const scrapeMangaDetails = async (slug) => {
     const browser = await playwright.chromium.launch(config.browser);
-    const page = await browser.newPage();
+
+    const context = await browser.newContext({
+        userAgent: getRandom()
+    });
+
+    const page = await context.newPage();
 
     page.__proto__.getMangaDetailByXPath = async (text) => {
         return await page.$eval(
@@ -14,6 +20,7 @@ const scrapeMangaDetails = async (slug) => {
             (el) => el ? el.parentElement?.nextElementSibling?.textContent?.trim()?.replace(/\s+/g, ' ') : ''
         );
     }
+
 
     await page.goto(`${config.frScan.baseUrl}/manga/${slug}/`, {
         timeout: config.maxWaitTime
@@ -60,6 +67,7 @@ const scrapeMangaDetails = async (slug) => {
     );
 
     await page.close();
+    await context.close();
     await browser.close();
 }
 
